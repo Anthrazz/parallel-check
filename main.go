@@ -151,7 +151,7 @@ func (gs *GlobalStateType) TogglePause() {
 }
 
 func (gs *GlobalStateType) Reset() {
-	for i, _ := range gs.Server {
+	for i := range gs.Server {
 		gs.Server[i].Reset()
 	}
 
@@ -161,7 +161,7 @@ func (gs *GlobalStateType) Reset() {
 
 // UpdateTimeouts updates the timeout on each tested instance
 func (gs *GlobalStateType) UpdateTimeouts() {
-	for i, _ := range gs.Server {
+	for i := range gs.Server {
 		gs.Server[i].TestPlugin.SetTimeout(gs.Timeout)
 	}
 }
