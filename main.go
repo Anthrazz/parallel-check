@@ -176,8 +176,17 @@ func (gs *GlobalStateType) UpdateTimeouts() {
 
 // Command is used to communicate with some Go Routines for Output and User Handling
 type Command struct {
-	Command string
+	Command CommandType
 }
+
+type CommandType int
+
+const (
+	_ CommandType = iota
+	CommandTypeClearConsole
+	CommandTypeRenderTable
+	CommandTypeQuit
+)
 
 /*************/
 /* Functions */
@@ -282,7 +291,7 @@ func run() int {
 	go keyboardRoutine(ctx, cancelRoutines, chRender)
 
 	// Clear Console Screen
-	chRender <- Command{Command: "clearConsole"}
+	chRender <- Command{Command: CommandTypeClearConsole}
 
 	// Start Main Loop which coordinate queries and rendering
 	for {
@@ -307,7 +316,7 @@ func run() int {
 			}
 
 			// render the user interface
-			chRender <- Command{Command: "renderTable"}
+			chRender <- Command{Command: CommandTypeRenderTable}
 
 			elapsedTimeSinceStart := time.Since(startLoop)
 			// calculate how long the tests in the last frame have taken and only wait up to the max wait time
@@ -338,7 +347,7 @@ func keyboardRoutine(ctx context.Context, cancelRoutines context.CancelFunc, chR
 	for {
 		select {
 		case <-ctx.Done():
-			chRender <- Command{Command: "clearConsole"}
+			chRender <- Command{Command: CommandTypeClearConsole}
 			return
 		case event := <-keysEvents:
 			if event.Err != nil {
@@ -352,7 +361,7 @@ func keyboardRoutine(ctx context.Context, cancelRoutines context.CancelFunc, chR
 			}
 			// Quit
 			if event.Rune == 'q' || event.Rune == 'Q' || event.Key == keyboard.KeyCtrlC {
-				chRender <- Command{Command: "clearConsole"}
+				chRender <- Command{Command: CommandTypeClearConsole}
 				cancelRoutines()
 				return
 			}
@@ -386,7 +395,7 @@ func keyboardRoutine(ctx context.Context, cancelRoutines context.CancelFunc, chR
 			}
 
 			// Re-render Table
-			chRender <- Command{Command: "renderTable"}
+			chRender <- Command{Command: CommandTypeRenderTable}
 		}
 	}
 }
@@ -401,13 +410,13 @@ func renderRoutine(ctx context.Context, wg *sync.WaitGroup, commands <-chan Comm
 			runtime.Goexit()
 		case cmd := <-commands:
 			switch cmd.Command {
-			case "quit":
+			case CommandTypeQuit:
 				return
-			case "clearConsole":
+			case CommandTypeClearConsole:
 				fmt.Print("\033[H\033[2J")
 
 			// Rewrite the whole console output
-			case "renderTable":
+			case CommandTypeRenderTable:
 				// Rewrite the whole table to allow a down scale of the query history column
 				table := tablewriter.NewWriter(writer)
 				table.SetHeader(
