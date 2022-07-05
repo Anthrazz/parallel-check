@@ -337,7 +337,8 @@ func keyboardRoutine(chRender chan Command) {
 			GlobalState.TogglePause()
 		}
 		// Quit
-		if event.Rune == 'q' || event.Rune == 'Q' {
+		if event.Rune == 'q' || event.Rune == 'Q' || event.Key == keyboard.KeyCtrlC {
+			chRender <- Command{Command: "clearConsole"}
 			os.Exit(0)
 		}
 		// Reset - Set Variable to do reset between tests
