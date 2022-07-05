@@ -1,11 +1,13 @@
 package plugins
 
 import (
+	"context"
 	"errors"
 	"fmt"
-	"github.com/mattn/go-shellwords"
 	"os/exec"
 	"time"
+
+	"github.com/mattn/go-shellwords"
 )
 
 /**
@@ -14,10 +16,6 @@ its exitcode as the test result.
 
 Its still WIP and not ready for use.
 */
-
-import (
-	"context"
-)
 
 type CommandCollector struct {
 	command []string

@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/Anthrazz/parallel-check/plugins"
 	"time"
+
+	"github.com/Anthrazz/parallel-check/plugins"
 )
 
 // Collector provides an interface for a single data source (e.g. server) which should be regularly be tested

@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/Anthrazz/parallel-check/plugins"
 	"github.com/fatih/color"
-	"time"
 )
 
 /*

@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+
 	"github.com/Anthrazz/parallel-check/plugins"
 )
 

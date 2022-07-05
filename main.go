@@ -3,12 +3,12 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/Anthrazz/parallel-check/plugins"
 	"os"
 	"strconv"
 	"sync"
 	"time"
 
+	"github.com/Anthrazz/parallel-check/plugins"
 	"github.com/eiannone/keyboard"
 	"github.com/gosuri/uilive"
 	"github.com/miekg/dns"
