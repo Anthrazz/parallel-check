@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/Anthrazz/parallel-check/plugins"
 	"github.com/fatih/color"
-	"time"
 )
 
 /*
@@ -64,7 +65,7 @@ func (s *Server) ExecuteQuery() {
 		s.SetAverageDelay(dataPoint.GetDelay())
 
 		// Set overall worst response delay
-		GlobalState.SetWorstResponseDelay(dataPoint.GetDelay())
+		globalState.SetWorstResponseDelay(dataPoint.GetDelay())
 	} else {
 		s.ErrorQueries++
 	}
@@ -77,7 +78,7 @@ func (s *Server) ExecuteQuery() {
 
 func (s *Server) SetBestDelay(d time.Duration) {
 	// Default value for s.BestDelay is 0 - so set it explicit at the first query
-	if GlobalState.TestCounter == 1 {
+	if globalState.TestCounter == 1 {
 		s.BestDelay = d
 	} else if s.BestDelay > d {
 		s.BestDelay = d
@@ -105,7 +106,7 @@ func (s *Server) AppendAnswer(delay time.Duration, result bool) {
 // DeleteOldestTest deletes the oldest Server.Answer entry when it
 // would exceed the query history length to be displayed
 func (s *Server) DeleteOldestTest() {
-	toRemove := len(s.Answers) - GlobalState.MaximumHistoryLength
+	toRemove := len(s.Answers) - globalState.MaximumHistoryLength
 	if toRemove >= 1 {
 		s.Answers = s.Answers[toRemove:]
 	}
@@ -160,14 +161,14 @@ func (a *TestResult) GetColoredHistoryEntry() string {
 // getHistoryDelayRating returns an arbitrary float between 0 and 1 (lower is better) which
 // indicates how good/bad the response was in comparison to the worst response
 func getHistoryDelayRating(d time.Duration) float64 {
-	return float64(d) / float64(GlobalState.WorstResponseDelay)
+	return float64(d) / float64(globalState.WorstResponseDelay)
 }
 
 // show a scale for the usage of the color in the query history
 func getHistoryColorScale() string {
 	scale := "Scale: "
 
-	worstDelay := GlobalState.WorstResponseDelay
+	worstDelay := globalState.WorstResponseDelay
 
 	delays := []float64{
 		float64(worstDelay) * 0.6,
