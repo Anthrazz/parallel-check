@@ -347,7 +347,6 @@ func keyboardRoutine(ctx context.Context, cancelRoutines context.CancelFunc, chR
 	for {
 		select {
 		case <-ctx.Done():
-			chRender <- Command{Command: CommandTypeClearConsole}
 			return
 		case event := <-keysEvents:
 			if event.Err != nil {
@@ -361,7 +360,6 @@ func keyboardRoutine(ctx context.Context, cancelRoutines context.CancelFunc, chR
 			}
 			// Quit
 			if event.Rune == 'q' || event.Rune == 'Q' || event.Key == keyboard.KeyCtrlC {
-				chRender <- Command{Command: CommandTypeClearConsole}
 				cancelRoutines()
 				return
 			}
