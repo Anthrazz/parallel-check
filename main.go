@@ -104,8 +104,8 @@ func (gs *GlobalStateType) AddServer(ip string, testPlugin string) error {
 	gs.Server = append(gs.Server, s)
 
 	// set the length of the longest IP, needed for AutoScaleQueryHistory()
-	if len(ip) > gs.LongestIPLength {
-		gs.LongestIPLength = len(ip)
+	if len(s.TestPlugin.GetName()) > gs.LongestIPLength {
+		gs.LongestIPLength = len(s.TestPlugin.GetName())
 	}
 
 	return nil
@@ -120,7 +120,7 @@ func (gs *GlobalStateType) AutoScaleQueryHistory() {
 
 	// Do not scale under 13 history entries because table header "QUERY HISTORY"
 	// is 13 chars long, so we can use the already allocated space
-	if newSize > 13 {
+	if newSize > len("QUERY HISTORY") {
 		gs.MaximumHistoryLength = newSize
 	}
 }
@@ -422,6 +422,7 @@ func renderRoutine(ctx context.Context, wg *sync.WaitGroup, commands <-chan Comm
 				)
 				table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
 				table.SetCenterSeparator("|")
+				table.SetColWidth(globalState.LongestIPLength)
 
 				for _, resolver := range globalState.Server {
 
