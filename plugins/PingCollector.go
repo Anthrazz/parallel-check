@@ -80,7 +80,7 @@ func (p *PingCollector) getNewPinger() *ping.Pinger {
 	return pinger
 }
 
-func (p PingCollector) ExecuteTest() (DataPointInterface, error) {
+func (p *PingCollector) ExecuteTest() (DataPointInterface, error) {
 	pinger := p.getNewPinger()
 	pinger.Run() // Blocks until finished.
 
